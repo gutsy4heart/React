@@ -1,20 +1,99 @@
-*,
-*::after,
-*::before {
-    box-sizing: border-box;
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f9;
+    color: #333;
 }
 
+.app {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.task-list {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-right: 1px solid #ddd;
+}
+
+.task-details, .task-edit-form {
+    flex: 2;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Task List Animations */
+.task-list ul li {
+    animation: slideIn 0.3s ease-in-out;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fafafa;
+    transition: background-color 0.3s;
+}
+
+.task-list ul li:hover {
+    background-color: #e9e9ff;
+}
+
+/* Buttons */
 button {
+    padding: 10px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
-ul,
-ol {
-    list-style: none;
+button:hover {
+    background-color: #ccc;
 }
 
-a {
-    text-decoration: none;
+/* Input Fields */
+input[type="text"], textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    animation: fadeIn 0.5s;
+}
+
+/* Task Details */
+.task-details h2 {
+    animation: slideIn 0.3s;
+}
+
+.task-details p {
+    animation: fadeIn 0.5s;
 }

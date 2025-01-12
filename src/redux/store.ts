@@ -1,31 +1,12 @@
+import { configureStore } from '@reduxjs/toolkit';
+import { tasksReducer } from './tasksReducer';
 
-import { createStore } from 'redux';
-import {tasksReducer} from './tasksReducer';
-
-const saveToLocalStorage = (state) => {
-    try {
-        const serializedState = JSON.stringify(state);
-        localStorage.setItem('tasks', serializedState);
-    } catch (e) {
-        console.error('Could not save state', e);
-    }
-};
-
-const loadFromLocalStorage = () => {
-    try {
-        const serializedState = localStorage.getItem('tasks');
-        if (serializedState === null) return undefined;
-        return JSON.parse(serializedState);
-    } catch (e) {
-        console.error('Could not load state', e);
-        return undefined;
-    }
-};
-
-const persistedState = loadFromLocalStorage();
-
-const store = createStore(tasksReducer, persistedState);
-
-store.subscribe(() => saveToLocalStorage(store.getState()));
+const store = configureStore({
+    reducer: tasksReducer, // Or combine reducers here if you have multiple slices
+});
 
 export default store;
+
+// Export types for use in your app
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
