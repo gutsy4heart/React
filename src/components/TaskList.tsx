@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import { useTaskContext } from '../TaskContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '@redux/store';
 import { Task } from '../types';
 
 const TaskList: React.FC = () => {
-    const { state, dispatch } = useTaskContext();
+    const dispatch = useDispatch();
+    const tasks = useSelector((state: RootState) => state.tasks);
+    const filter = useSelector((state: RootState) => state.filter);
+    const searchQuery = useSelector((state: RootState) => state.searchQuery);
+
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
 
     const filteredTasks: Task[] =
-        state.filter === 'all'
-            ? state.tasks
-            : state.filter === 'completed'
-                ? state.tasks.filter((task) => task.completed)
-                : state.tasks.filter((task) => !task.completed);
+        filter === 'all'
+            ? tasks
+            : filter === 'completed'
+                ? tasks.filter((task) => task.completed)
+                : tasks.filter((task) => !task.completed);
 
     const searchedTasks: Task[] = filteredTasks.filter((task) =>
-        task.title.toLowerCase().includes(state.searchQuery.toLowerCase())
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     const addTask = () => {
@@ -34,10 +39,17 @@ const TaskList: React.FC = () => {
         dispatch({ type: 'SET_SEARCH_QUERY', payload: e.target.value });
     };
 
-    const navigateTo = (page: string, taskId?: number) => {
-        dispatch({ type: 'NAVIGATE', payload: { page, taskId } });
+    const toggleTask = (taskId: number) => {
+        dispatch({ type: 'TOGGLE_TASK', payload: taskId });
     };
 
+    const deleteTask = (taskId: number) => {
+        dispatch({ type: 'DELETE_TASK', payload: taskId });
+    };
+
+    const setFilter = (filterType: string) => {
+        dispatch({ type: 'SET_FILTER', payload: filterType });
+    };
 
     return (
         <div className="task-list">
@@ -59,20 +71,14 @@ const TaskList: React.FC = () => {
                 <input
                     type="text"
                     placeholder="Search Tasks"
-                    value={state.searchQuery}
+                    value={searchQuery}
                     onChange={handleSearch}
                 />
             </div>
             <div>
-                <button onClick={() => dispatch({ type: 'SET_FILTER', payload: 'all' })}>
-                    Show All
-                </button>
-                <button onClick={() => dispatch({ type: 'SET_FILTER', payload: 'completed' })}>
-                    Show Completed
-                </button>
-                <button onClick={() => dispatch({ type: 'SET_FILTER', payload: 'uncompleted' })}>
-                    Show Uncompleted
-                </button>
+                <button onClick={() => setFilter('all')}>Show All</button>
+                <button onClick={() => setFilter('completed')}>Show Completed</button>
+                <button onClick={() => setFilter('uncompleted')}>Show Uncompleted</button>
             </div>
             <ul>
                 {searchedTasks.map((task) => (
@@ -80,13 +86,11 @@ const TaskList: React.FC = () => {
                         <input
                             type="checkbox"
                             checked={task.completed}
-                            onChange={() => dispatch({ type: 'TOGGLE_TASK', payload: task.id })}
+                            onChange={() => toggleTask(task.id)}
                         />
-                        <span onClick={() => navigateTo('details', task.id)}>{task.title}</span>
-                        <button onClick={() => dispatch({ type: 'DELETE_TASK', payload: task.id })}>
-                            Delete
-                        </button>
-                        <button onClick={() => navigateTo('edit', task.id)}>Edit</button>
+                        <span>{task.title}</span>
+
+                        <button onClick={() => deleteTask(task.id)}>Delete</button>
                     </li>
                 ))}
             </ul>

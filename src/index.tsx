@@ -1,8 +1,9 @@
 import './index.css';
 import { createRoot } from 'react-dom/client';
 import { StrictMode } from 'react';
+import { Provider } from 'react-redux'; // Импортируем Provider из react-redux
+import store from '@redux/store'; // Импорт Redux store
 import App from './App';
-import { TaskProvider } from './TaskContext';
 
 const rootContainer = document.querySelector('#root');
 
@@ -12,8 +13,8 @@ const root = createRoot(rootContainer);
 
 root.render(
     <StrictMode>
-        <TaskProvider>
+        <Provider store={store}> {/* Оборачиваем App в Provider */}
             <App />
-        </TaskProvider>
+        </Provider>
     </StrictMode>
 );
