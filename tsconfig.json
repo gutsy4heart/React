@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "sourceMap": true,
+
+    "allowUnreachableCode": false,
+    "allowUmdGlobalAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noUncheckedIndexedAccess": true,
+
+    "alwaysStrict": true,
+    "strictBindCallApply": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
+
+    "baseUrl": "./",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "paths": {
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@redux/*": [
+        "src/redux/*"
+      ]
+    },
+
+    "target": "es2022",
+    "jsx": "react-jsx",
+
+    "allowJs": true,
+    "checkJs": true,
+    "esModuleInterop": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}
