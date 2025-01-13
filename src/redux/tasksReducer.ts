@@ -25,12 +25,24 @@ export const tasksReducer = (state: RootState = initialState, action: Action): R
                 ...state,
                 searchQuery: action.payload,
             };
-        case 'NAVIGATE':
+        case 'NAVIGATE': {
+            console.log('Navigating to page:', action.payload.page, 'Task ID:', action.payload.taskId);
             return {
                 ...state,
                 currentPage: action.payload.page,
                 selectedTaskId: action.payload.taskId ?? null,
             };
+        }
+        case 'EDIT_TASK': {
+            const { id, updates } = action.payload;
+            console.log('Editing task:', id, 'Updates:', updates);
+            return {
+                ...state,
+                tasks: state.tasks.map((task) =>
+                    task.id === id ? { ...task, ...updates } : task
+                ),
+            };
+        }
         default:
             return state;
     }

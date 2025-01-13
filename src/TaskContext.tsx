@@ -28,15 +28,16 @@ const tasksReducer = (state: RootState, action: Action): RootState => {
                         : task
                 ),
             };
-        case 'EDIT_TASK':
+        case 'EDIT_TASK': {
+            const { id, updates } = action.payload;
             return {
                 ...state,
                 tasks: state.tasks.map((task) =>
-                    task.id === action.payload.id
-                        ? { ...task, ...action.payload.updates }
-                        : task
+                    task.id === id ? { ...task, ...updates } : task
                 ),
             };
+        }
+
         case 'DELETE_TASK':
             return { ...state, tasks: state.tasks.filter((task) => task.id !== action.payload) };
         case 'SET_FILTER':
