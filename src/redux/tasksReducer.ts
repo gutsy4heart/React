@@ -20,6 +20,7 @@ export const tasksReducer = (state: RootState = initialState, action: Action): R
                 ...state,
                 filter: action.payload,
             };
+
         case 'SET_SEARCH_QUERY':
             return {
                 ...state,

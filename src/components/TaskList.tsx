@@ -13,6 +13,7 @@ const TaskList: React.FC = () => {
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
 
+    // Фильтрация задач
     const filteredTasks: Task[] =
         filter === 'all'
             ? tasks
@@ -52,6 +53,10 @@ const TaskList: React.FC = () => {
         dispatch({ type: 'DELETE_TASK', payload: taskId });
     };
 
+    const setFilter = (filterType: string) => {
+        dispatch({ type: 'SET_FILTER', payload: filterType });
+    };
+
     const selectedTask = tasks.find((task) => task.id === selectedTaskId);
 
     return (
@@ -81,6 +86,11 @@ const TaskList: React.FC = () => {
                             dispatch({ type: 'SET_SEARCH_QUERY', payload: e.target.value })
                         }
                     />
+                </div>
+                <div>
+                    <button onClick={() => setFilter('all')}>All</button>
+                    <button onClick={() => setFilter('completed')}>Completed</button>
+                    <button onClick={() => setFilter('uncompleted')}>Uncompleted</button>
                 </div>
                 <ul>
                     {searchedTasks.map((task) => (
