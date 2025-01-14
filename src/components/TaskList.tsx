@@ -36,6 +36,10 @@ const TaskList: React.FC = () => {
         setDescription('');
     };
 
+    const toggleTask = (taskId: number) => {
+        dispatch({ type: 'TOGGLE_TASK', payload: taskId });
+    };
+
     const selectTask = (taskId: number) => {
         dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId } });
     };
@@ -80,10 +84,23 @@ const TaskList: React.FC = () => {
                 </div>
                 <ul>
                     {searchedTasks.map((task) => (
-                        <li key={task.id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <span onClick={() => selectTask(task.id)} style={{ cursor: 'pointer' }}>
-                                {task.title}
-                            </span>
+                        <li key={task.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <input
+                                    type="checkbox"
+                                    checked={task.completed}
+                                    onChange={() => toggleTask(task.id)}
+                                />
+                                <span
+                                    onClick={() => selectTask(task.id)}
+                                    style={{
+                                        cursor: 'pointer',
+                                        textDecoration: task.completed ? 'line-through' : 'none',
+                                    }}
+                                >
+                                    {task.title}
+                                </span>
+                            </div>
                             <div>
                                 <button onClick={() => editTask(task.id)}>Edit</button>
                                 <button onClick={() => deleteTask(task.id)}>Delete</button>
@@ -106,6 +123,9 @@ const TaskList: React.FC = () => {
                         </p>
                         <p>
                             <strong>Created At:</strong> {new Date(selectedTask.id).toLocaleString()}
+                        </p>
+                        <p>
+                            <strong>Status:</strong> {selectedTask.completed ? 'Completed' : 'Not Completed'}
                         </p>
                     </div>
                 ) : (

@@ -43,6 +43,14 @@ export const tasksReducer = (state: RootState = initialState, action: Action): R
                 ),
             };
         }
+        case 'TOGGLE_TASK':
+            return {
+                ...state,
+                tasks: state.tasks.map((task) =>
+                    task.id === action.payload ? { ...task, completed: !task.completed } : task
+                ),
+            };
+
         default:
             return state;
     }

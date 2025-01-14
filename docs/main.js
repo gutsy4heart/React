@@ -182,6 +182,12 @@ var TaskList = function TaskList() {
     setTitle('');
     setDescription('');
   };
+  var toggleTask = function toggleTask(taskId) {
+    dispatch({
+      type: 'TOGGLE_TASK',
+      payload: taskId
+    });
+  };
   var selectTask = function selectTask(taskId) {
     dispatch({
       type: 'NAVIGATE',
@@ -250,16 +256,30 @@ var TaskList = function TaskList() {
       key: task.id,
       style: {
         display: 'flex',
+        alignItems: 'center',
         justifyContent: 'space-between'
       }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("span", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: '10px'
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+      type: "checkbox",
+      checked: task.completed,
+      onChange: function onChange() {
+        return toggleTask(task.id);
+      }
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("span", {
       onClick: function onClick() {
         return selectTask(task.id);
       },
       style: {
-        cursor: 'pointer'
+        cursor: 'pointer',
+        textDecoration: task.completed ? 'line-through' : 'none'
       }
-    }, task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    }, task.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
       onClick: function onClick() {
         return editTask(task.id);
       }
@@ -273,7 +293,7 @@ var TaskList = function TaskList() {
     style: {
       flex: 1
     }
-  }, selectedTask ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Title:"), " ", selectedTask.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Description:"), " ", selectedTask.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Created At:"), " ", new Date(selectedTask.id).toLocaleString())) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, "Select a task to view details")));
+  }, selectedTask ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Title:"), " ", selectedTask.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Description:"), " ", selectedTask.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Created At:"), " ", new Date(selectedTask.id).toLocaleString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Status:"), " ", selectedTask.completed ? 'Completed' : 'Not Completed')) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, "Select a task to view details")));
 };
 /* harmony default export */ __webpack_exports__["default"] = (TaskList);
 
@@ -380,6 +400,14 @@ var tasksReducer = function tasksReducer() {
           })
         });
       }
+    case 'TOGGLE_TASK':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        tasks: state.tasks.map(function (task) {
+          return task.id === action.payload ? _objectSpread(_objectSpread({}, task), {}, {
+            completed: !task.completed
+          }) : task;
+        })
+      });
     default:
       return state;
   }
