@@ -7,6 +7,11 @@ const AddTask: React.FC = () => {
     const [description, setDescription] = useState('');
 
     const saveTask = () => {
+        if (!title.trim()) {
+            alert('Task title cannot be empty.');
+            return;
+        }
+
         dispatch({
             type: 'ADD_TASK',
             payload: {
@@ -16,11 +21,15 @@ const AddTask: React.FC = () => {
                 completed: false,
             },
         });
-        dispatch({ type: 'NAVIGATE', payload: { page: '/' } });
+
+        // Возвращаемся на главную страницу после добавления задачи
+        dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+        window.history.pushState(null, '', '/');
     };
 
     const cancelTask = () => {
-        dispatch({ type: 'CANCEL_ADD_TASK' });
+        dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+        window.history.pushState(null, '', '/');
     };
 
     return (

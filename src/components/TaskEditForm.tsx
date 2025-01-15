@@ -21,9 +21,18 @@ const TaskEditForm: React.FC<{ taskId: number }> = ({ taskId }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (task) {
-            dispatch({ type: 'EDIT_TASK', payload: { id: task.id, updates: { title, description } } });
-            window.history.pushState(null, '', `/tasks/details/${task.id}`);
+            dispatch({
+                type: 'EDIT_TASK',
+                payload: { id: task.id, updates: { title, description } },
+            });
+            dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+            window.history.pushState(null, '', '/');
         }
+    };
+
+    const handleCancel = () => {
+        dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+        window.history.pushState(null, '', '/');
     };
 
     if (!task) return <div>Task not found</div>;
@@ -44,6 +53,9 @@ const TaskEditForm: React.FC<{ taskId: number }> = ({ taskId }) => {
                     placeholder="Description"
                 />
                 <button type="submit">Save</button>
+                <button type="button" onClick={handleCancel}>
+                    Cancel
+                </button>
             </form>
         </div>
     );
