@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '@redux/store';
 import { Task } from '../types';
+import TaskEditForm from './TaskEditForm';
 
 const TaskList: React.FC = () => {
     const dispatch = useDispatch();
@@ -9,6 +10,7 @@ const TaskList: React.FC = () => {
     const filter = useSelector((state: RootState) => state.filter);
     const searchQuery = useSelector((state: RootState) => state.searchQuery);
     const selectedTaskId = useSelector((state: RootState) => state.selectedTaskId);
+    const currentPage = useSelector((state: RootState) => state.currentPage); // текущая страница (main или edit)
 
     const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
@@ -35,6 +37,8 @@ const TaskList: React.FC = () => {
         dispatch({ type: 'ADD_TASK', payload: newTask });
         setTitle('');
         setDescription('');
+
+        dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: newTask.id } });
     };
 
     const toggleTask = (taskId: number) => {
@@ -45,12 +49,12 @@ const TaskList: React.FC = () => {
         dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId } });
     };
 
-    const editTask = (taskId: number) => {
-        dispatch({ type: 'NAVIGATE', payload: { page: 'edit', taskId } });
-    };
-
     const deleteTask = (taskId: number) => {
         dispatch({ type: 'DELETE_TASK', payload: taskId });
+
+        if (taskId === selectedTaskId) {
+            dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+        }
     };
 
     const setFilter = (filterType: string) => {
@@ -62,7 +66,7 @@ const TaskList: React.FC = () => {
     return (
         <div className="task-container" style={{ display: 'flex', gap: '20px' }}>
             {/* Левая сторона */}
-            <div className="task-list" style={{ flex: 1 }}>
+            <div className="task-list" style={{ flex: 2 }}>
                 <div>
                     <input
                         type="text"
@@ -88,13 +92,26 @@ const TaskList: React.FC = () => {
                     />
                 </div>
                 <div>
-                    <button onClick={() => setFilter('all')}>All</button>
-                    <button onClick={() => setFilter('completed')}>Completed</button>
-                    <button onClick={() => setFilter('uncompleted')}>Uncompleted</button>
+                    <select
+                        value={filter}
+                        onChange={(e) => setFilter(e.target.value)}
+                        style={{ padding: '5px', fontSize: '14px' }}
+                    >
+                        <option value="all">All</option>
+                        <option value="completed">Completed</option>
+                        <option value="uncompleted">Uncompleted</option>
+                    </select>
                 </div>
                 <ul>
                     {searchedTasks.map((task) => (
-                        <li key={task.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <li
+                            key={task.id}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}
+                        >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                 <input
                                     type="checkbox"
@@ -112,7 +129,16 @@ const TaskList: React.FC = () => {
                                 </span>
                             </div>
                             <div>
-                                <button onClick={() => editTask(task.id)}>Edit</button>
+                                <button
+                                    onClick={() =>
+                                        dispatch({
+                                            type: 'NAVIGATE',
+                                            payload: { page: 'edit', taskId: task.id },
+                                        })
+                                    }
+                                >
+                                    Edit
+                                </button>
                                 <button onClick={() => deleteTask(task.id)}>Delete</button>
                             </div>
                         </li>
@@ -121,8 +147,10 @@ const TaskList: React.FC = () => {
             </div>
 
             {/* Правая сторона */}
-            <div className="task-details" style={{ flex: 1 }}>
-                {selectedTask ? (
+            <div className="task-details">
+                {currentPage === 'edit' ? (
+                    <TaskEditForm />
+                ) : selectedTask ? (
                     <div>
                         <h2>Task Details</h2>
                         <p>

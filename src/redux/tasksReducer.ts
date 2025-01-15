@@ -51,7 +51,14 @@ export const tasksReducer = (state: RootState = initialState, action: Action): R
                     task.id === action.payload ? { ...task, completed: !task.completed } : task
                 ),
             };
-
+        case 'DELETE_TASK': {
+            const taskId = action.payload;
+            console.log('Deleting task:', taskId);
+            return {
+                ...state,
+                tasks: state.tasks.filter((task) => task.id !== taskId),
+            };
+        }
         default:
             return state;
     }

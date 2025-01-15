@@ -100,7 +100,7 @@ var TaskEditForm = function TaskEditForm() {
     onChange: function onChange(e) {
       return setTitle(e.target.value);
     },
-    placeholder: "Task Title"
+    placeholder: "Task Tit3le"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("textarea", {
     value: description,
     onChange: function onChange(e) {
@@ -160,6 +160,8 @@ var TaskList = function TaskList() {
     _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState3, 2),
     description = _useState4[0],
     setDescription = _useState4[1];
+
+  // Фильтрация задач
   var filteredTasks = filter === 'all' ? tasks : filter === 'completed' ? tasks.filter(function (task) {
     return task.completed;
   }) : tasks.filter(function (task) {
@@ -212,6 +214,12 @@ var TaskList = function TaskList() {
       payload: taskId
     });
   };
+  var setFilter = function setFilter(filterType) {
+    dispatch({
+      type: 'SET_FILTER',
+      payload: filterType
+    });
+  };
   var selectedTask = tasks.find(function (task) {
     return task.id === selectedTaskId;
   });
@@ -251,7 +259,19 @@ var TaskList = function TaskList() {
         payload: e.target.value
       });
     }
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("ul", null, searchedTasks.map(function (task) {
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    onClick: function onClick() {
+      return setFilter('all');
+    }
+  }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    onClick: function onClick() {
+      return setFilter('completed');
+    }
+  }, "Completed"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    onClick: function onClick() {
+      return setFilter('uncompleted');
+    }
+  }, "Uncompleted")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("ul", null, searchedTasks.map(function (task) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("li", {
       key: task.id,
       style: {

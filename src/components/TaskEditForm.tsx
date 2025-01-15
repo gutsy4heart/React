@@ -42,7 +42,7 @@ const TaskEditForm: React.FC = () => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="Task Title"
+                placeholder="Task Tit3le"
             />
             <textarea
                 value={description}
