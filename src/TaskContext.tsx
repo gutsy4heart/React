@@ -1,4 +1,3 @@
-// TaskContext.tsx
 import React, { createContext, useReducer, useContext, ReactNode } from 'react';
 import { RootState, Action } from './types';
 
@@ -8,6 +7,7 @@ const initialState: RootState = {
     searchQuery: '',
     currentPage: 'main',
     selectedTaskId: null,
+    isAddingTask: false,  // Set the default value for isAddingTask
 };
 
 const TaskContext = createContext<{
@@ -41,7 +41,10 @@ const tasksReducer = (state: RootState, action: Action): RootState => {
         case 'DELETE_TASK':
             return { ...state, tasks: state.tasks.filter((task) => task.id !== action.payload) };
         case 'SET_FILTER':
-            return { ...state, filter: action.payload };
+            return {
+                ...state,
+                filter: action.payload,
+            };
         case 'SET_SEARCH_QUERY':
             return { ...state, searchQuery: action.payload };
         case 'NAVIGATE':
@@ -56,7 +59,7 @@ const tasksReducer = (state: RootState, action: Action): RootState => {
 };
 
 interface TaskProviderProps {
-    children: ReactNode; // Define the type of children
+    children: ReactNode;
 }
 
 export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {

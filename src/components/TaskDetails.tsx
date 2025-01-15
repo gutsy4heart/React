@@ -1,16 +1,20 @@
 import React from 'react';
-import { useTaskContext } from '../TaskContext';
+import { useSelector } from 'react-redux';
+import { RootState } from '../types';
 
-const TaskDetails: React.FC<{ taskId: number | null }> = ({ taskId }) => {
-    const { state } = useTaskContext();
-    const task = state.tasks.find((t) => t.id === taskId);
+const TaskDetails: React.FC<{ taskId: number }> = ({ taskId }) => {
+    const task = useSelector((state: RootState) =>
+        state.tasks.find((task) => task.id === taskId)
+    );
 
     if (!task) return <div>Task not found</div>;
 
     return (
-        <div className="task-details">
-            <h2>{task.title}</h2>
-            <p>{task.description}</p>
+        <div>
+            <h3>Task Details</h3>
+            <p>Title: {task.title}</p>
+            <p>Description: {task.description}</p>
+            <p>Status: {task.completed ? 'Completed' : 'Uncompleted'}</p>
         </div>
     );
 };
