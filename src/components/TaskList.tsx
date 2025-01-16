@@ -30,7 +30,7 @@ const TaskList: React.FC<TaskListProps> = ({ viewTaskDetails, startEditingTask, 
 
     return (
         <div className={'task-list'}>
-            <h2>Tasks</h2>
+            <a href=' '>Tasks</a>
 
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
