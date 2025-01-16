@@ -6,6 +6,7 @@ const initialState: RootState = {
     searchQuery: '',
     currentPage: 'main',
     selectedTaskId: null,
+    isAddingTask: false,
 };
 
 export const tasksReducer = (state: RootState = initialState, action: Action): RootState => {

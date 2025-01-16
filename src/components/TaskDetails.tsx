@@ -15,6 +15,7 @@ const TaskDetails: React.FC<{ taskId: number }> = ({ taskId }) => {
             <p>Title: {task.title}</p>
             <p>Description: {task.description}</p>
             <p>Status: {task.completed ? 'Completed' : 'Uncompleted'}</p>
+            <strong>Created At:</strong> {new Date(task.id).toLocaleString()}
         </div>
     );
 };

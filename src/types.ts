@@ -4,6 +4,11 @@ export interface Task {
     description: string;
     completed: boolean;
 }
+export interface TaskListProps {
+    viewTaskDetails: (taskId: number) => void;
+    startEditingTask: (taskId: number) => void;
+    startAddingTask: () => void; // Новый пропс для добавления задачи
+}
 
 export interface RootState {
     tasks: Task[];

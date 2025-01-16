@@ -11,22 +11,235 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
 /* harmony import */ var _components_TaskList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @components/TaskList */ "./src/components/TaskList.tsx");
-/* harmony import */ var _components_TaskEditForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/TaskEditForm */ "./src/components/TaskEditForm.tsx");
+/* harmony import */ var _components_TaskDetails__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @components/TaskDetails */ "./src/components/TaskDetails.tsx");
+/* harmony import */ var _components_TaskEditForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @components/TaskEditForm */ "./src/components/TaskEditForm.tsx");
+/* harmony import */ var _components_AddTask__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @components/AddTask */ "./src/components/AddTask.tsx");
 
 
 
+
+
+ // Новый компонент для добавления задач
 
 var App = function App() {
-  var currentPage = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
+  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_5__.useDispatch)();
+  var currentPage = (0,react_redux__WEBPACK_IMPORTED_MODULE_5__.useSelector)(function (state) {
     return state.currentPage;
   });
+  var selectedTaskId = (0,react_redux__WEBPACK_IMPORTED_MODULE_5__.useSelector)(function (state) {
+    return state.selectedTaskId;
+  });
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
+    var onPopState = function onPopState() {
+      var path = window.location.pathname.split('/');
+      if (path[1] === 'tasks') {
+        var taskId = path[3] ? parseInt(path[3], 10) : null;
+        if (taskId && (path[2] === 'details' || path[2] === 'edit')) {
+          dispatch({
+            type: 'NAVIGATE',
+            payload: {
+              page: path[2],
+              taskId: taskId
+            }
+          });
+        } else if (path[2] === 'add') {
+          dispatch({
+            type: 'NAVIGATE',
+            payload: {
+              page: 'add',
+              taskId: null
+            }
+          });
+        } else {
+          dispatch({
+            type: 'NAVIGATE',
+            payload: {
+              page: 'main',
+              taskId: null
+            }
+          });
+        }
+      } else {
+        dispatch({
+          type: 'NAVIGATE',
+          payload: {
+            page: 'main',
+            taskId: null
+          }
+        });
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    onPopState();
+    return function () {
+      window.removeEventListener('popstate', onPopState);
+    };
+  }, [dispatch]);
+  var viewTaskDetails = function viewTaskDetails(taskId) {
+    dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        page: 'details',
+        taskId: taskId
+      }
+    });
+    window.history.pushState(null, '', "/tasks/details/".concat(taskId));
+  };
+  var startEditingTask = function startEditingTask(taskId) {
+    dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        page: 'edit',
+        taskId: taskId
+      }
+    });
+    window.history.pushState(null, '', "/tasks/edit/".concat(taskId));
+  };
+  var startAddingTask = function startAddingTask() {
+    dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        page: 'add',
+        taskId: null
+      }
+    });
+    window.history.pushState(null, '', '/tasks/add');
+  };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "app"
-  }, currentPage === 'main' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_TaskList__WEBPACK_IMPORTED_MODULE_1__["default"], null), currentPage === 'edit' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_TaskEditForm__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+    style: {
+      display: 'flex',
+      gap: '20px'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    style: {
+      flex: 1,
+      maxWidth: '400px'
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_TaskList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    viewTaskDetails: viewTaskDetails,
+    startEditingTask: startEditingTask,
+    startAddingTask: startAddingTask
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, currentPage === 'details' && selectedTaskId && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_TaskDetails__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    taskId: selectedTaskId
+  }), currentPage === 'edit' && selectedTaskId && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_TaskEditForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    taskId: selectedTaskId
+  }), currentPage === 'add' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_AddTask__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
 };
 /* harmony default export */ __webpack_exports__["default"] = (App);
+
+/***/ }),
+
+/***/ "./src/components/AddTask.tsx":
+/*!************************************!*\
+  !*** ./src/components/AddTask.tsx ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+
+
+
+var AddTask = function AddTask() {
+  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.useDispatch)();
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
+    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState, 2),
+    title = _useState2[0],
+    setTitle = _useState2[1];
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
+    _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState3, 2),
+    description = _useState4[0],
+    setDescription = _useState4[1];
+  var saveTask = function saveTask() {
+    if (!title.trim()) {
+      alert('Task title cannot be empty.');
+      return;
+    }
+    dispatch({
+      type: 'ADD_TASK',
+      payload: {
+        id: Date.now(),
+        title: title,
+        description: description,
+        completed: false
+      }
+    });
+
+    // Возвращаемся на главную страницу после добавления задачи
+    dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        page: 'main',
+        taskId: null
+      }
+    });
+    window.history.pushState(null, '', '/');
+  };
+  var cancelTask = function cancelTask() {
+    dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        page: 'main',
+        taskId: null
+      }
+    });
+    window.history.pushState(null, '', '/');
+  };
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", null, "Add Task"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+    type: "text",
+    placeholder: "Task Title",
+    value: title,
+    onChange: function onChange(e) {
+      return setTitle(e.target.value);
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("textarea", {
+    placeholder: "Task Description",
+    value: description,
+    onChange: function onChange(e) {
+      return setDescription(e.target.value);
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    onClick: saveTask
+  }, "Save"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    onClick: cancelTask
+  }, "Cancel")));
+};
+/* harmony default export */ __webpack_exports__["default"] = (AddTask);
+
+/***/ }),
+
+/***/ "./src/components/TaskDetails.tsx":
+/*!****************************************!*\
+  !*** ./src/components/TaskDetails.tsx ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
+
+
+var TaskDetails = function TaskDetails(_ref) {
+  var taskId = _ref.taskId;
+  var task = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
+    return state.tasks.find(function (task) {
+      return task.id === taskId;
+    });
+  });
+  if (!task) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Task not found");
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h3", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Title: ", task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Description: ", task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Status: ", task.completed ? 'Completed' : 'Uncompleted'));
+};
+/* harmony default export */ __webpack_exports__["default"] = (TaskDetails);
 
 /***/ }),
 
@@ -44,80 +257,82 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var TaskEditForm = function TaskEditForm() {
+var TaskEditForm = function TaskEditForm(_ref) {
+  var taskId = _ref.taskId;
   var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.useDispatch)();
-  var taskId = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.useSelector)(function (state) {
-    return state.selectedTaskId;
-  });
   var task = (0,react_redux__WEBPACK_IMPORTED_MODULE_2__.useSelector)(function (state) {
-    return state.tasks.find(function (t) {
-      return t.id === taskId;
+    return state.tasks.find(function (task) {
+      return task.id === taskId;
     });
   });
-  if (!taskId || !task) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, "Task not found or no task selected"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-      onClick: function onClick() {
-        return dispatch({
-          type: 'NAVIGATE',
-          payload: {
-            page: 'main'
-          }
-        });
-      }
-    }, "Go Back"));
-  }
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(task.title),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
     _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState, 2),
     title = _useState2[0],
     setTitle = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(task.description),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
     _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState3, 2),
     description = _useState4[0],
     setDescription = _useState4[1];
-  var saveTask = function saveTask() {
-    dispatch({
-      type: 'EDIT_TASK',
-      payload: {
-        id: task.id,
-        updates: {
-          title: title,
-          description: description
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
+    if (task) {
+      setTitle(task.title);
+      setDescription(task.description);
+    }
+  }, [task]);
+  var handleSubmit = function handleSubmit(e) {
+    e.preventDefault();
+    if (task) {
+      dispatch({
+        type: 'EDIT_TASK',
+        payload: {
+          id: task.id,
+          updates: {
+            title: title,
+            description: description
+          }
         }
-      }
-    });
+      });
+      dispatch({
+        type: 'NAVIGATE',
+        payload: {
+          page: 'main',
+          taskId: null
+        }
+      });
+      window.history.pushState(null, '', '/');
+    }
+  };
+  var handleCancel = function handleCancel() {
     dispatch({
       type: 'NAVIGATE',
       payload: {
-        page: 'main'
+        page: 'main',
+        taskId: null
       }
     });
+    window.history.pushState(null, '', '/');
   };
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-    className: "task-edit-form"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", null, "Edit Task"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+  if (!task) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, "Task not found");
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h3", null, "Edit Task"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("form", {
+    onSubmit: handleSubmit
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
     type: "text",
     value: title,
     onChange: function onChange(e) {
       return setTitle(e.target.value);
     },
-    placeholder: "Task Tit3le"
+    placeholder: "Title"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("textarea", {
     value: description,
     onChange: function onChange(e) {
       return setDescription(e.target.value);
     },
-    placeholder: "Task Description"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-    onClick: saveTask
+    placeholder: "Description"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    type: "submit"
   }, "Save"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-    onClick: function onClick() {
-      return dispatch({
-        type: 'NAVIGATE',
-        payload: {
-          page: 'main'
-        }
-      });
-    }
+    type: "button",
+    onClick: handleCancel
   }, "Cancel")));
 };
 /* harmony default export */ __webpack_exports__["default"] = (TaskEditForm);
@@ -131,138 +346,58 @@ var TaskEditForm = function TaskEditForm() {
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
-/* harmony import */ var _TaskEditForm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TaskEditForm */ "./src/components/TaskEditForm.tsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_redux__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/dist/react-redux.mjs");
 
 
-
-
-var TaskList = function TaskList() {
-  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useDispatch)();
-  var tasks = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
+var TaskList = function TaskList(_ref) {
+  var viewTaskDetails = _ref.viewTaskDetails,
+    startEditingTask = _ref.startEditingTask,
+    startAddingTask = _ref.startAddingTask;
+  var dispatch = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useDispatch)();
+  var tasks = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
     return state.tasks;
   });
-  var filter = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
+  var filter = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
     return state.filter;
   });
-  var searchQuery = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
+  var searchQuery = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
     return state.searchQuery;
   });
-  var selectedTaskId = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
-    return state.selectedTaskId;
-  });
-  var currentPage = (0,react_redux__WEBPACK_IMPORTED_MODULE_3__.useSelector)(function (state) {
-    return state.currentPage;
-  }); // текущая страница (main или edit)
-
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
-    _useState2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState, 2),
-    title = _useState2[0],
-    setTitle = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(''),
-    _useState4 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_useState3, 2),
-    description = _useState4[0],
-    setDescription = _useState4[1];
 
   // Фильтрация задач
-  var filteredTasks = filter === 'all' ? tasks : filter === 'completed' ? tasks.filter(function (task) {
-    return task.completed;
-  }) : tasks.filter(function (task) {
-    return !task.completed;
+  var filteredTasks = tasks.filter(function (task) {
+    if (filter === 'completed') return task.completed;
+    if (filter === 'uncompleted') return !task.completed;
+    return true;
   });
+
+  // Поиск задач
   var searchedTasks = filteredTasks.filter(function (task) {
     return task.title.toLowerCase().includes(searchQuery.toLowerCase());
   });
-  var addTask = function addTask() {
-    var newTask = {
-      id: Date.now(),
-      title: title,
-      description: description,
-      completed: false
-    };
-    dispatch({
-      type: 'ADD_TASK',
-      payload: newTask
-    });
-    setTitle('');
-    setDescription('');
-    dispatch({
-      type: 'NAVIGATE',
-      payload: {
-        page: 'main',
-        taskId: newTask.id
-      }
-    });
-  };
-  var toggleTask = function toggleTask(taskId) {
+  var toggleTaskStatus = function toggleTaskStatus(taskId) {
     dispatch({
       type: 'TOGGLE_TASK',
       payload: taskId
     });
-  };
-  var selectTask = function selectTask(taskId) {
-    dispatch({
-      type: 'NAVIGATE',
-      payload: {
-        page: 'main',
-        taskId: taskId
-      }
-    });
+    window.history.pushState(null, '', '/'); // Возвращаемся на главную страницу
   };
   var deleteTask = function deleteTask(taskId) {
     dispatch({
       type: 'DELETE_TASK',
       payload: taskId
     });
-    if (taskId === selectedTaskId) {
-      dispatch({
-        type: 'NAVIGATE',
-        payload: {
-          page: 'main',
-          taskId: null
-        }
-      });
-    }
+    window.history.pushState(null, '', '/'); // Возвращаемся на главную страницу
   };
-  var setFilter = function setFilter(filterType) {
-    dispatch({
-      type: 'SET_FILTER',
-      payload: filterType
-    });
-  };
-  var selectedTask = tasks.find(function (task) {
-    return task.id === selectedTaskId;
-  });
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-    className: "task-container",
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Tasks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     style: {
       display: 'flex',
-      gap: '20px'
+      gap: '10px',
+      alignItems: 'center'
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-    className: "task-list",
-    style: {
-      flex: 2
-    }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
-    type: "text",
-    placeholder: "Task Title",
-    value: title,
-    onChange: function onChange(e) {
-      return setTitle(e.target.value);
-    }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("textarea", {
-    placeholder: "Task Description",
-    value: description,
-    onChange: function onChange(e) {
-      return setDescription(e.target.value);
-    }
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
-    onClick: addTask
-  }, "Add Task")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
     type: "text",
     placeholder: "Search Tasks",
     value: searchQuery,
@@ -272,67 +407,54 @@ var TaskList = function TaskList() {
         payload: e.target.value
       });
     }
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("select", {
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    onClick: startAddingTask
+  }, "Add Task")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("select", {
     value: filter,
     onChange: function onChange(e) {
-      return setFilter(e.target.value);
-    },
-    style: {
-      padding: '5px',
-      fontSize: '14px'
+      return dispatch({
+        type: 'SET_FILTER',
+        payload: e.target.value
+      });
     }
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("option", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
     value: "all"
-  }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("option", {
+  }, "All"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
     value: "completed"
-  }, "Completed"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("option", {
+  }, "Completed"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("option", {
     value: "uncompleted"
-  }, "Uncompleted"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("ul", null, searchedTasks.map(function (task) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("li", {
+  }, "Uncompleted")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("ul", null, searchedTasks.map(function (task) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("li", {
       key: task.id,
-      style: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between'
-      }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       style: {
         display: 'flex',
         alignItems: 'center',
         gap: '10px'
       }
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
       type: "checkbox",
       checked: task.completed,
       onChange: function onChange() {
-        return toggleTask(task.id);
+        return toggleTaskStatus(task.id);
       }
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("span", {
-      onClick: function onClick() {
-        return selectTask(task.id);
-      },
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", {
       style: {
         cursor: 'pointer',
-        textDecoration: task.completed ? 'line-through' : 'none'
-      }
-    }, task.title)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+        textDecoration: 'underline'
+      },
       onClick: function onClick() {
-        return dispatch({
-          type: 'NAVIGATE',
-          payload: {
-            page: 'edit',
-            taskId: task.id
-          }
-        });
+        return viewTaskDetails(task.id);
       }
-    }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("button", {
+    }, task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+      onClick: function onClick() {
+        return startEditingTask(task.id);
+      }
+    }, "Edit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
       onClick: function onClick() {
         return deleteTask(task.id);
       }
-    }, "Delete")));
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-    className: "task-details"
-  }, currentPage === 'edit' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_TaskEditForm__WEBPACK_IMPORTED_MODULE_2__["default"], null) : selectedTask ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("h2", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Ti5tle:"), " ", selectedTask.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Description:"), " ", selectedTask.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Created At:"), " ", new Date(selectedTask.id).toLocaleString()), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("strong", null, "Status:"), " ", selectedTask.completed ? 'Completed' : 'Not Completed')) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("p", null, "Select a task to view details")));
+    }, "Delete"));
+  })));
 };
 /* harmony default export */ __webpack_exports__["default"] = (TaskList);
 
@@ -348,6 +470,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _reduxjs_toolkit__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @reduxjs/toolkit */ "./node_modules/@reduxjs/toolkit/dist/redux-toolkit.modern.mjs");
 /* harmony import */ var _tasksReducer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./tasksReducer */ "./src/redux/tasksReducer.ts");
 
+ // Убедитесь, что путь верный
 
 var saveToLocalStorage = function saveToLocalStorage(state) {
   try {
@@ -410,6 +533,31 @@ var tasksReducer = function tasksReducer() {
       return _objectSpread(_objectSpread({}, state), {}, {
         tasks: [].concat((0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(state.tasks), [action.payload])
       });
+    case 'TOGGLE_TASK':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        tasks: state.tasks.map(function (task) {
+          return task.id === action.payload ? _objectSpread(_objectSpread({}, task), {}, {
+            completed: !task.completed
+          }) : task;
+        })
+      });
+    case 'EDIT_TASK':
+      {
+        var _action$payload = action.payload,
+          id = _action$payload.id,
+          updates = _action$payload.updates;
+        return _objectSpread(_objectSpread({}, state), {}, {
+          tasks: state.tasks.map(function (task) {
+            return task.id === id ? _objectSpread(_objectSpread({}, task), updates) : task;
+          })
+        });
+      }
+    case 'DELETE_TASK':
+      return _objectSpread(_objectSpread({}, state), {}, {
+        tasks: state.tasks.filter(function (task) {
+          return task.id !== action.payload;
+        })
+      });
     case 'SET_FILTER':
       return _objectSpread(_objectSpread({}, state), {}, {
         filter: action.payload
@@ -419,44 +567,10 @@ var tasksReducer = function tasksReducer() {
         searchQuery: action.payload
       });
     case 'NAVIGATE':
-      {
-        var _action$payload$taskI;
-        console.log('Navigating to page:', action.payload.page, 'Task ID:', action.payload.taskId);
-        return _objectSpread(_objectSpread({}, state), {}, {
-          currentPage: action.payload.page,
-          selectedTaskId: (_action$payload$taskI = action.payload.taskId) !== null && _action$payload$taskI !== void 0 ? _action$payload$taskI : null
-        });
-      }
-    case 'EDIT_TASK':
-      {
-        var _action$payload = action.payload,
-          id = _action$payload.id,
-          updates = _action$payload.updates;
-        console.log('Editing task:', id, 'Updates:', updates);
-        return _objectSpread(_objectSpread({}, state), {}, {
-          tasks: state.tasks.map(function (task) {
-            return task.id === id ? _objectSpread(_objectSpread({}, task), updates) : task;
-          })
-        });
-      }
-    case 'TOGGLE_TASK':
       return _objectSpread(_objectSpread({}, state), {}, {
-        tasks: state.tasks.map(function (task) {
-          return task.id === action.payload ? _objectSpread(_objectSpread({}, task), {}, {
-            completed: !task.completed
-          }) : task;
-        })
+        currentPage: action.payload.page,
+        selectedTaskId: action.payload.taskId || null
       });
-    case 'DELETE_TASK':
-      {
-        var taskId = action.payload;
-        console.log('Deleting task:', taskId);
-        return _objectSpread(_objectSpread({}, state), {}, {
-          tasks: state.tasks.filter(function (task) {
-            return task.id !== taskId;
-          })
-        });
-      }
     default:
       return state;
   }

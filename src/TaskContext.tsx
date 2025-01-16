@@ -7,7 +7,7 @@ const initialState: RootState = {
     searchQuery: '',
     currentPage: 'main',
     selectedTaskId: null,
-    isAddingTask: false,  // Set the default value for isAddingTask
+    isAddingTask: false,
 };
 
 const TaskContext = createContext<{
