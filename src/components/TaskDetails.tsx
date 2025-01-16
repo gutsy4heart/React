@@ -10,7 +10,7 @@ const TaskDetails: React.FC<{ taskId: number }> = ({ taskId }) => {
     if (!task) return <div>Task not found</div>;
 
     return (
-        <div>
+        <div className={'task-details'}>
             <h3>Task Details</h3>
             <p>Title: {task.title}</p>
             <p>Description: {task.description}</p>

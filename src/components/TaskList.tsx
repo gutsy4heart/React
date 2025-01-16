@@ -29,7 +29,7 @@ const TaskList: React.FC<TaskListProps> = ({ viewTaskDetails, startEditingTask, 
     };
 
     return (
-        <div>
+        <div className={'task-list'}>
             <h2>Tasks</h2>
 
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>

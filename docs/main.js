@@ -237,7 +237,7 @@ var TaskDetails = function TaskDetails(_ref) {
     });
   });
   if (!task) return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Task not found");
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h3", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Title: ", task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Description: ", task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Status: ", task.completed ? 'Completed' : 'Uncompleted'));
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h3", null, "Task Details"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Title: ", task.title), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Description: ", task.description), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Status: ", task.completed ? 'Completed' : 'Uncompleted'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("strong", null, "Created At:"), " ", new Date(task.id).toLocaleString());
 };
 /* harmony default export */ __webpack_exports__["default"] = (TaskDetails);
 
@@ -365,15 +365,11 @@ var TaskList = function TaskList(_ref) {
   var searchQuery = (0,react_redux__WEBPACK_IMPORTED_MODULE_1__.useSelector)(function (state) {
     return state.searchQuery;
   });
-
-  // Фильтрация задач
   var filteredTasks = tasks.filter(function (task) {
     if (filter === 'completed') return task.completed;
     if (filter === 'uncompleted') return !task.completed;
     return true;
   });
-
-  // Поиск задач
   var searchedTasks = filteredTasks.filter(function (task) {
     return task.title.toLowerCase().includes(searchQuery.toLowerCase());
   });
@@ -382,14 +378,14 @@ var TaskList = function TaskList(_ref) {
       type: 'TOGGLE_TASK',
       payload: taskId
     });
-    window.history.pushState(null, '', '/'); // Возвращаемся на главную страницу
+    window.history.pushState(null, '', '/');
   };
   var deleteTask = function deleteTask(taskId) {
     dispatch({
       type: 'DELETE_TASK',
       payload: taskId
     });
-    window.history.pushState(null, '', '/'); // Возвращаемся на главную страницу
+    window.history.pushState(null, '', '/');
   };
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Tasks"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     style: {
@@ -409,7 +405,7 @@ var TaskList = function TaskList(_ref) {
     }
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
     onClick: startAddingTask
-  }, "Add Task")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("select", {
+  }, "Add")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("select", {
     value: filter,
     onChange: function onChange(e) {
       return dispatch({
@@ -523,7 +519,8 @@ var initialState = {
   filter: 'all',
   searchQuery: '',
   currentPage: 'main',
-  selectedTaskId: null
+  selectedTaskId: null,
+  isAddingTask: false
 };
 var tasksReducer = function tasksReducer() {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
