@@ -27,10 +27,15 @@ const TaskList: React.FC<TaskListProps> = ({ viewTaskDetails, startEditingTask, 
         dispatch({ type: 'DELETE_TASK', payload: taskId });
         window.history.pushState(null, '', '/');
     };
-
+    const handleHome = () => {
+        dispatch({ type: 'NAVIGATE', payload: { page: 'main', taskId: null } });
+        window.history.pushState(null, '', '/');
+    };
     return (
         <div className={'task-list'}>
-            <a href=' '>Tasks</a>
+            <a onClick={handleHome} href='#'>
+                <h1>Tasks</h1>
+            </a>
 
             <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <input
